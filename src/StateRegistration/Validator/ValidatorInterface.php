@@ -4,5 +4,5 @@ namespace StateRegistration\Validator;
 
 interface ValidatorInterface
 {
-    public function validate($stateRegistrationNumber);
+    public function isValid($stateRegistrationNumber);
 }
