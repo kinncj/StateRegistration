@@ -2,9 +2,11 @@
 
 namespace StateRegistration\Validator;
 
-require_once dirname(__FILE__)."/ValidatorInterface.php";
+require_once dirname(__FILE__)."/bootstrap.php";
 
-class Acre implements \StateRegistration\ValidatorInterface\Validator
+use StateRegistration\Validator;
+
+class Acre implements ValidatorInterface
 {
     public function validate($stateRegistrationNumber)
     {

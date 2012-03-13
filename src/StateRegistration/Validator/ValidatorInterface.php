@@ -1,8 +1,8 @@
 <?php
 
-namespace StateRegistration\ValidatorInterface;
+namespace StateRegistration\Validator;
 
-interface Validator
+interface ValidatorInterface
 {
     public function validate($stateRegistrationNumber);
 }
