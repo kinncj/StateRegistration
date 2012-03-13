@@ -8,6 +8,9 @@ use StateRegistration\Validator;
 
 class Acre implements ValidatorInterface
 {
+    const DIGIT_COUNT = 13;
+    const FIRST_TWO_DIGITS = "01";
+    
     private $stateRegistrationNumber = null;
     
     public function isValid($stateRegistrationNumber)
@@ -23,11 +26,7 @@ class Acre implements ValidatorInterface
         }
 
         if ($this->isSizeValid()) {
-            if (substr($this->stateRegistrationNumber, 0, 2) == "01") {
-                return true;
-            } else {
-                return false;
-            }
+            return $this->areFirstTwoDigitsValid();
         } else {
             return false;
         }
@@ -44,7 +43,16 @@ class Acre implements ValidatorInterface
 
     private function isSizeValid()
     {
-        if (strlen($this->stateRegistrationNumber) == 13) {
+        if (strlen($this->stateRegistrationNumber) == self::DIGIT_COUNT) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function areFirstTwoDigitsValid()
+    {
+        if (substr($this->stateRegistrationNumber, 0, 2) == self::FIRST_TWO_DIGITS) {
             return true;
         } else {
             return false;
