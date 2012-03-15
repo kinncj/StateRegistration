@@ -10,6 +10,7 @@ class Acre implements ValidatorInterface
 {
     const DIGIT_COUNT = 13;
     const FIRST_TWO_DIGITS = "01";
+    const CHECK_DIGIT_COUNT = 2;
     
     private $stateRegistrationNumber = null;
     
@@ -26,10 +27,17 @@ class Acre implements ValidatorInterface
         }
 
         if ($this->isSizeValid()) {
-            return $this->areFirstTwoDigitsValid();
+            if ($this->areFirstTwoDigitsValid()) {
+                return $this->validateCheckDigits();
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
+
+        
+        
     }
 
     private function isTypeValid()
@@ -57,6 +65,46 @@ class Acre implements ValidatorInterface
         } else {
             return false;
         }
+    }
+
+    private function validateCheckDigits()
+    {
+        $checkDigits = substr($this->stateRegistrationNumber, (self::DIGIT_COUNT - self::CHECK_DIGIT_COUNT), self::CHECK_DIGIT_COUNT);
+        $stateRegistrationNumberWithoutCheckDigits = substr($this->stateRegistrationNumber, 0, strlen($this->stateRegistrationNumber) - self::CHECK_DIGIT_COUNT);
+
+        $weight1 = array(4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
+        $weight2 = array(5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
+        
+        $firstDigit = $this->calculateDigit($stateRegistrationNumberWithoutCheckDigits, $weight1);
+
+        $stateRegistrationNumberWithOneDigit = $stateRegistrationNumberWithoutCheckDigits.$firstDigit;
+
+        $secondDigit = $this->calculateDigit($stateRegistrationNumberWithOneDigit, $weight2);
+
+        if ($checkDigits == $firstDigit.$secondDigit) {
+            return true;
+        } else {
+            return false;
+        }
+        
+    }
+
+    private function calculateDigit($stateRegistrationNumber, $weightList)
+    {
+        $counter = 0;
+        $sum = 0;
+
+        for($counter; $counter < strlen($stateRegistrationNumber); $counter++) {
+            $sum += $stateRegistrationNumber[$counter] * $weightList[$counter];
+        }
+
+        $digit = 11 - intval(($sum % 11));
+
+        if ($digit == 10 || $digit == 11) {
+            $digit = 0;
+        }
+
+        return $digit;
     }
     
 }

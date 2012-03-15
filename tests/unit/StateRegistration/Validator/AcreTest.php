@@ -5,7 +5,7 @@ class AcreTest extends PHPUnit_Framework_TestCase
     public function testShouldReturnTrueWhenAStateRegistrationNumberHasThirteenDigits()
     {
         $acre = StateRegistration\Validator\Factory::getValidator("AC");
-        $result = $acre->isValid("0111111111111");
+        $result = $acre->isValid("0100482300112");
 
         $this->assertTrue($result);
     }
@@ -38,7 +38,7 @@ class AcreTest extends PHPUnit_Framework_TestCase
     public function testShouldReturnTrueWhenAStateRegistrationNumberHasTwoFirstDigitsAreZeroAndOne()
     {
         $acre = StateRegistration\Validator\Factory::getValidator("AC");
-        $result = $acre->isValid("0111111111111");
+        $result = $acre->isValid("0100482300112");
 
         $this->assertTrue($result);
     }
@@ -47,6 +47,24 @@ class AcreTest extends PHPUnit_Framework_TestCase
     {
         $acre = StateRegistration\Validator\Factory::getValidator("AC");
         $result = $acre->isValid("1111111111111");
+
+        $this->assertFalse($result);
+    }
+
+    public function testShouldReturnTrueWhenCheckDigitsAreValid()
+    {
+        $checkDigits = "12";
+        $acre = StateRegistration\Validator\Factory::getValidator("AC");
+        $result = $acre->isValid("01004823001".$checkDigits);
+
+        $this->assertTrue($result);
+    }
+
+    public function testShouldReturnFalseWhenCheckDigitsAreInvalid()
+    {
+        $checkDigits = "11";
+        $acre = StateRegistration\Validator\Factory::getValidator("AC");
+        $result = $acre->isValid("01004823001".$checkDigits);
 
         $this->assertFalse($result);
     }
