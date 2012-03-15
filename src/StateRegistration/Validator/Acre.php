@@ -22,9 +22,8 @@ class Acre implements ValidatorInterface
 
     private function validate()
     {
-        if ($this->hasValidStructure()) {
-            return $this->validateCheckDigits();
-        }
+        $this->hasValidStructure();
+        return $this->validateCheckDigits();
     }
 
     private function hasValidStructure()
@@ -41,7 +40,6 @@ class Acre implements ValidatorInterface
             throw new \InvalidArgumentException("State registration number must have the two first digits equals ".self::CHECK_DIGIT_COUNT);
         }
 
-        return true;
     }
 
     private function isTypeValid()
@@ -85,11 +83,7 @@ class Acre implements ValidatorInterface
 
         $secondCheckDigit = $this->calculateDigit($stateRegistrationNumberWithOneCheckDigit, $weightListForSecondCheckDigit);
 
-        if ($checkDigits == $firstCheckDigit.$secondCheckDigit) {
-            return true;
-        } else {
-            return false;
-        }
+        return $checkDigits == $firstCheckDigit.$secondCheckDigit;
     }
 
     private function getCheckDigits()
