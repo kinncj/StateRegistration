@@ -10,24 +10,26 @@ class AcreTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result);
     }
 
-    public function testShouldReturnFalseWhenAStateRegistrationNumberHasLessThanThirteenDigits()
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testShouldThrowAnExceptionWhenAStateRegistrationNumberHasLessThanThirteenDigits()
     {
         $acre = StateRegistration\Validator\Factory::getValidator("AC");
         $result = $acre->isValid("111111111111");
-
-        $this->assertFalse($result);
-    }
-
-    public function testShouldReturnFalseWhenAStateRegistrationNumberHasMoreThanThirteenDigits()
-    {
-        $acre = StateRegistration\Validator\Factory::getValidator("AC");
-        $result = $acre->isValid("11111111111111111");
-
-        $this->assertFalse($result);
     }
 
     /**
-     * @expectedException UnexpectedValueException
+     * @expectedException InvalidArgumentException
+     */
+    public function testShouldThrowAnExceptionWhenAStateRegistrationNumberHasMoreThanThirteenDigits()
+    {
+        $acre = StateRegistration\Validator\Factory::getValidator("AC");
+        $result = $acre->isValid("11111111111111111");
+    }
+
+    /**
+     * @expectedException StateRegistration\Validator\Exception\UnexpectedTypeException
      */
     public function testShouldThrowAnExceptionWhenAStateRegistrationNumberIsNotNumeric()
     {
@@ -43,12 +45,13 @@ class AcreTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result);
     }
 
-    public function testShouldReturnTrueWhenAStateRegistrationNumberDoesNotHaveTwoFirstDigitsAreZeroAndOne()
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testShouldReturnFalseWhenAStateRegistrationNumberDoesNotHaveTwoFirstDigitsAreZeroAndOne()
     {
         $acre = StateRegistration\Validator\Factory::getValidator("AC");
         $result = $acre->isValid("1111111111111");
-
-        $this->assertFalse($result);
     }
 
     public function testShouldReturnTrueWhenCheckDigitsAreValid()

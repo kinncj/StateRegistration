@@ -22,22 +22,26 @@ class Acre implements ValidatorInterface
 
     private function validate()
     {
+        if ($this->hasValidStructure()) {
+            return $this->validateCheckDigits();
+        }
+    }
+
+    private function hasValidStructure()
+    {
         if (!$this->isTypeValid()) {
-            throw new \UnexpectedValueException("State registration number must be a numeric value");
+            throw new Exception\UnexpectedTypeException("State registration number must be a numeric value");
         }
 
-        if ($this->isSizeValid()) {
-            if ($this->areFirstTwoDigitsValid()) {
-                return $this->validateCheckDigits();
-            } else {
-                return false;
-            }
-        } else {
-            return false;
+        if (!$this->isSizeValid()){
+            throw new \InvalidArgumentException("State registration number must have ".self::TOTAL_DIGIT_COUNT." digits");
         }
 
-        
-        
+        if (!$this->areFirstTwoDigitsValid()) {
+            throw new \InvalidArgumentException("State registration number must have the two first digits equals ".self::CHECK_DIGIT_COUNT);
+        }
+
+        return true;
     }
 
     private function isTypeValid()
@@ -69,24 +73,33 @@ class Acre implements ValidatorInterface
 
     private function validateCheckDigits()
     {
-        $checkDigits = substr($this->stateRegistrationNumber, (self::TOTAL_DIGIT_COUNT - self::CHECK_DIGIT_COUNT), self::CHECK_DIGIT_COUNT);
-        $stateRegistrationNumberWithoutCheckDigits = substr($this->stateRegistrationNumber, 0, strlen($this->stateRegistrationNumber) - self::CHECK_DIGIT_COUNT);
+        $checkDigits = $this->getCheckDigits();
+        $stateRegistrationNumberWithoutCheckDigits = $this->getStateRegistrationNumberWithoutCheckDigits();
 
-        $weight1 = array(4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
-        $weight2 = array(5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
+        $weightListForFirstCheckDigit = array(4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
+        $weightListForSecondCheckDigit = array(5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
         
-        $firstDigit = $this->calculateDigit($stateRegistrationNumberWithoutCheckDigits, $weight1);
+        $firstCheckDigit = $this->calculateDigit($stateRegistrationNumberWithoutCheckDigits, $weightListForFirstCheckDigit);
 
-        $stateRegistrationNumberWithOneDigit = $stateRegistrationNumberWithoutCheckDigits.$firstDigit;
+        $stateRegistrationNumberWithOneCheckDigit = $stateRegistrationNumberWithoutCheckDigits.$firstCheckDigit;
 
-        $secondDigit = $this->calculateDigit($stateRegistrationNumberWithOneDigit, $weight2);
+        $secondCheckDigit = $this->calculateDigit($stateRegistrationNumberWithOneCheckDigit, $weightListForSecondCheckDigit);
 
-        if ($checkDigits == $firstDigit.$secondDigit) {
+        if ($checkDigits == $firstCheckDigit.$secondCheckDigit) {
             return true;
         } else {
             return false;
         }
-        
+    }
+
+    private function getCheckDigits()
+    {
+        return substr($this->stateRegistrationNumber, (self::TOTAL_DIGIT_COUNT - self::CHECK_DIGIT_COUNT), self::CHECK_DIGIT_COUNT);
+    }
+
+    private function getStateRegistrationNumberWithoutCheckDigits()
+    {
+        return substr($this->stateRegistrationNumber, 0, (self::TOTAL_DIGIT_COUNT - self::CHECK_DIGIT_COUNT));
     }
 
     private function calculateDigit($stateRegistrationNumber, $weightList)
