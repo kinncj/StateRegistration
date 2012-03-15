@@ -8,7 +8,7 @@ use StateRegistration\Validator;
 
 class Acre implements ValidatorInterface
 {
-    const DIGIT_COUNT = 13;
+    const TOTAL_DIGIT_COUNT = 13;
     const FIRST_TWO_DIGITS = "01";
     const CHECK_DIGIT_COUNT = 2;
     
@@ -51,7 +51,7 @@ class Acre implements ValidatorInterface
 
     private function isSizeValid()
     {
-        if (strlen($this->stateRegistrationNumber) == self::DIGIT_COUNT) {
+        if (strlen($this->stateRegistrationNumber) == self::TOTAL_DIGIT_COUNT) {
             return true;
         } else {
             return false;
@@ -69,7 +69,7 @@ class Acre implements ValidatorInterface
 
     private function validateCheckDigits()
     {
-        $checkDigits = substr($this->stateRegistrationNumber, (self::DIGIT_COUNT - self::CHECK_DIGIT_COUNT), self::CHECK_DIGIT_COUNT);
+        $checkDigits = substr($this->stateRegistrationNumber, (self::TOTAL_DIGIT_COUNT - self::CHECK_DIGIT_COUNT), self::CHECK_DIGIT_COUNT);
         $stateRegistrationNumberWithoutCheckDigits = substr($this->stateRegistrationNumber, 0, strlen($this->stateRegistrationNumber) - self::CHECK_DIGIT_COUNT);
 
         $weight1 = array(4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
