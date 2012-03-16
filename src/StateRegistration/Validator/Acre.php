@@ -22,11 +22,11 @@ class Acre implements ValidatorInterface
 
     private function validate()
     {
-        $this->hasValidStructure();
+        $this->validateStructure();
         return $this->validateCheckDigits();
     }
 
-    private function hasValidStructure()
+    private function validateStructure()
     {
         if (!$this->isTypeValid()) {
             throw new Exception\UnexpectedTypeException("State registration number must be a numeric value");
@@ -105,7 +105,7 @@ class Acre implements ValidatorInterface
             $sum += $stateRegistrationNumber[$counter] * $weightList[$counter];
         }
 
-        $digit = 11 - intval(($sum % 11));
+        $digit = 11 - ($sum % 11);
 
         if ($digit == 10 || $digit == 11) {
             $digit = 0;

@@ -56,9 +56,9 @@ class AcreTest extends PHPUnit_Framework_TestCase
 
     public function testShouldReturnTrueWhenCheckDigitsAreValid()
     {
-        $checkDigits = "12";
+        $checkDigits = "00";
         $acre = StateRegistration\Validator\Factory::getValidator("AC");
-        $result = $acre->isValid("01004823001".$checkDigits);
+        $result = $acre->isValid("01180009000".$checkDigits);
 
         $this->assertTrue($result);
     }
@@ -71,4 +71,5 @@ class AcreTest extends PHPUnit_Framework_TestCase
 
         $this->assertFalse($result);
     }
+
 }
