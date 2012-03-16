@@ -1,1 +1,10 @@
 Implementation of Brazilian state registration algorithms
+
+Some important informations:
+
+- Symfony ClassLoader component was added as a git submodule, so if you fork this repo you'll need to follow this steps:
+
+	1) On command line and in your project path execute: git submodule init
+	2) After that you'll need to execute: git submodule update
+
+And then you're ready to go! :D
